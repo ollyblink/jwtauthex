@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div ng-controller="restController">
+    <h2>Register</h2>
+    <form name="registerForm">
+        <table>
+            <tr>
+                <td>email</td>
+                <td><input ng-model="email" type="email"/></td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td><input ng-model="password" type="password"/></td>
+            </tr>
+        </table>
+        <button ng-click="register()">register</button>
+    </form>
+    <span ng-hide="answer==null">{{answer}}</span>
+    <h2>Authenticate</h2>
+    <form name="authenticateForm">
+        <table>
+            <tr>
+                <td>email</td>
+                <td><input ng-model="email" type="email"/></td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td><input ng-model="password" type="password"/></td>
+            </tr>
+        </table>
+        <button ng-click="authenticate()">authenticate</button>
+    </form>
+    <span ng-hide="authAnswer==null">{{authAnswer}}</span>
+    <div><button ng-click="getDashboard()">Click to test</button> <span  >{{data.data}}</span></div>
+
+</div>
+<p></p>
+<script src="myApp.js"></script>
+<script src="restController.js"></script>
+</body>
+</html>
