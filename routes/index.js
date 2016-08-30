@@ -15,6 +15,7 @@ router.get('/data', function (req, res) {
 });
 //register new users
 router.post('/register', function (req, res) {
+    console.log(req.body.email +", " + req.body.password);
     if (!req.body.email || !req.body.password) {
         res.json({success: false, message: 'Please enter an email address and password to register'});
     } else {
@@ -55,7 +56,7 @@ router.post('/authenticate', function (req, res) {
                         }
                     );
                     console.log("Auth: created new token: "+ token);
-                    res.json({success: true, token: 'JWT ' + token});
+                     res.json({success: true, token: 'JWT ' + token});
                 } else {
                     //PW doesn't match
                     res.send({success: false, message: 'Authentication failed. Passwords did not match.'});

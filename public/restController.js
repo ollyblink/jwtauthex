@@ -7,22 +7,21 @@ app.controller("restController", function ($scope, $http) {
                 'Authorization': $scope.token
             }
         }
-        $http.get("http://localhost:3000/dashboard", config).then(function (response) {
+        $http.get("http://localhost:3001/dashboard", config).then(function (response) {
             $scope.data = response.data;
         });
     };
 
     $scope.register = function () {
-        var data = {
+         var data = {
             'email': $scope.email,
             'password': $scope.password
         }
 
         var config = {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
         }
-        $http.post("http://localhost:3000/register", data, config).then(
+        $http.post("http://localhost:3001/register", data, config).then(
             function (response) {
                 //Success
                 var s = response.data.success;
@@ -44,9 +43,9 @@ app.controller("restController", function ($scope, $http) {
         }
 
         var config = {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
         }
-        $http.post("http://localhost:3000/authenticate", data, config).then(
+        $http.post("http://localhost:3001/authenticate", data, config).then(
             function (response) {
                 //Success
                 var s = response.data.success;

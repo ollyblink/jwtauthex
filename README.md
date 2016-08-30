@@ -13,7 +13,7 @@ Also install nodemon, which is great to automatically restart the server once so
 then call 
 
 
-    nodemon app.js
+    nodemon ./bin/www
 
 Now whenever something is changed, the server is reloaded and it also keeps running and is reloaded in case the server crashed (pretty cool!)
 
@@ -29,3 +29,6 @@ If something is unclear, just watch the <a href="https://www.youtube.com/watch?v
 ## Update ##
 Added some simple AngularJS-backed Page that simulates the same behaviour as postman.
 First field: register new email/password --> will automatically be written into the authenticate field. Once registered, click on authenticate --> you will see the token next to the button. Click on test and dashboard will be accessed and the data retrieved and displayed on the right of the button
+
+##issue##
+- somethings wrong with the angular header for register and authenticate --> when i write config { headers:{ then it wont work. only if I omit the "headers" it works... strange
