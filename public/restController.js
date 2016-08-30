@@ -1,65 +1,63 @@
-app.controller("restController", function ($scope, $http) {
-
-    $scope.token = null;
+app.controller("restController", function ($scope, $http, $window) {
+    $scope.baseUrl = "http://localhost:3001";
     $scope.getDashboard = function () {
         var config = {
             headers: {
-                'Authorization': $scope.token
+                'Authorization': $window.localStorage['jwtToken']
             }
         }
-        $http.get("http://localhost:3001/dashboard", config).then(function (response) {
+        $http.get($scope.baseUrl+"/dashboard", config).then(function (response) {
             $scope.data = response.data;
         });
     };
 
-    $scope.register = function () {
-         var data = {
-            'email': $scope.email,
-            'password': $scope.password
+    /**
+    * Just a helper method to factorise some code in the register and authenticate methods.
+    * */
+    $scope.getPostRequest = function(url){
+        var request = {
+            method: "POST",
+            url: $scope.baseUrl+"/"+url,
+            data: {
+                'email': $scope.email,
+                'password': $scope.password
+            }
         }
+        return request;
+    };
 
-        var config = {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-        }
-        $http.post("http://localhost:3001/register", data, config).then(
-            function (response) {
-                //Success
+    $scope.register = function () {
+        $http($scope.getPostRequest('register')).then(
+            function (response) {//Success
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "success: " + s + ", " + m;
             },
-            function (response) {
-                //Failed
+            function (response) {//Failed
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "failed: " + s + ", " + m;
             }
         )
     }
-    $scope.authenticate = function () {
-        var data = {
-            'email': $scope.email,
-            'password': $scope.password
-        }
 
-        var config = {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-        }
-        $http.post("http://localhost:3001/authenticate", data, config).then(
-            function (response) {
-                //Success
+
+    $scope.authenticate = function () {
+        $http($scope.getPostRequest('authenticate')).then(
+            function (response) {//Success
                 var s = response.data.success;
-                var t = response.data.token;
-                $scope.authAnswer = "success: " + s + ", " + t;
-                $scope.token = t;
+                $window.localStorage['jwtToken'] = response.data.token; //Store the token in the local storage
+                $scope.authAnswer = "success: " + s + ", " + $window.localStorage['jwtToken'];
             },
-            function (response) {
-                //Failed
+            function (response) {//Failed
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.authAnswer = "failed: " + s + ", " + m;
             }
         )
     }
-})
-;
+
+    $scope.logout = function(){
+        $window.localStorage.removeItem('jwtToken');
+    }
+});
