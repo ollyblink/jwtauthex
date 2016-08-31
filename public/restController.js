@@ -10,14 +10,25 @@ app.controller("restController", function ($scope, $http, $window) {
             $scope.data = response.data;
         });
     };
-
+    $scope.getData = function () {
+        var config = {
+            headers: {
+                'Authorization': $window.localStorage['jwtToken']
+            }
+        }
+        $http.get($scope.baseUrl+"/spirometryData", config).then(function (response) {
+            $scope.data = response.data;
+        });
+    };
     /**
     * Just a helper method to factorise some code in the register and authenticate methods.
     * */
     $scope.getPostRequest = function(url){
+        alert("post: "+  $scope.email + ", "+ $scope.password);
         var request = {
             method: "POST",
             url: $scope.baseUrl+"/"+url,
+
             data: {
                 'email': $scope.email,
                 'password': $scope.password
@@ -26,17 +37,22 @@ app.controller("restController", function ($scope, $http, $window) {
         return request;
     };
 
+    //TODO Dont get it... now it doesn't work anymore. find out why
     $scope.register = function () {
         $http($scope.getPostRequest('register')).then(
             function (response) {//Success
+                alert("success");
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "success: " + s + ", " + m;
+                alert($scope.answer);
             },
             function (response) {//Failed
+                alert("Failed");
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "failed: " + s + ", " + m;
+                alert($scope.answer);
             }
         )
     }

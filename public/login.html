@@ -1,0 +1,15 @@
+<h2>Authenticate</h2>
+<form name="authenticateForm">
+    <table>
+        <tr>
+            <td>email</td>
+            <td><input ng-model="email" type="email"/></td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td><input ng-model="password" type="password"/></td>
+        </tr>
+    </table>
+    <button ng-click="authenticate()">authenticate</button>
+</form>
+<span ng-hide="authAnswer==null">{{authAnswer}}</span>

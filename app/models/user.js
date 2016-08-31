@@ -15,11 +15,9 @@ var UserSchema = new mongoose.Schema({
     },
     publickey: String,
     privatekey: String,
-    role: {
-        type: String,
-        enum: ['Client', 'Manager', 'Admin'],
-        default: 'Client'
-    }
+    encryptionKey: String,
+
+    spirometryData: []
 });
 
 //Save the user's hash password

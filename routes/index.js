@@ -10,12 +10,14 @@ var config = require('../config/main'); //node expect js files. thus you don't n
 router.get('/', function (req, res) {
     res.send("d");
 });
+
 router.get('/data', function (req, res) {
-    res.json({"data":'hello world'}).status(200);
+    res.json({"data": 'hello world'}).status(200);
 });
+
 //register new users
 router.post('/register', function (req, res) {
-    console.log(req.body.email +", " + req.body.password);
+    console.log(req.body.email + ", " + req.body.password);
     if (!req.body.email || !req.body.password) {
         res.json({success: false, message: 'Please enter an email address and password to register'});
     } else {
@@ -34,10 +36,20 @@ router.post('/register', function (req, res) {
     }
 });
 
-var tokenExpirationTime = 120; //token expires after two minutes
+/**
+ *  easier to configure token here
+ * @returns {*}
+ */
+function createToken(user) {
+    return jwt.sign(user, config.secret, {
+            expiresIn: 120//in seconds
+        }
+    );
+}
+
 //Authenticate the user and get a JWT
 router.post('/authenticate', function (req, res) {
-    console.log("Received auth: "+  req.body.email  +", " + req.body.password)
+    console.log("Received auth: " + req.body.email + ", " + req.body.password)
     User.findOne({
         email: req.body.email //That's the username...
     }, function (err, user) {
@@ -51,12 +63,8 @@ router.post('/authenticate', function (req, res) {
             user.comparePassword(req.body.password, function (err, isMatch) {
                 if (isMatch && !err) {
                     //create the jwt!
-                    var token = jwt.sign(user, config.secret, {
-                            expiresIn: tokenExpirationTime//in seconds
-                        }
-                    );
-                    console.log("Auth: created new token: "+ token);
-                     res.json({success: true, token: 'JWT ' + token});
+                    var token = createToken(user);
+                    res.json({success: true, token: 'JWT ' + token});
                 } else {
                     //PW doesn't match
                     res.send({success: false, message: 'Authentication failed. Passwords did not match.'});
@@ -68,7 +76,21 @@ router.post('/authenticate', function (req, res) {
 
 //Protect dashboard route with JWT //test it works
 router.get('/dashboard', passport.authenticate('jwt', {session: false}), function (req, res) {
-    res.send({data: 'it worked! USer id is : ' + req.user._id + '.'});//_id is autoincrement
+    res.send({data: 'it worked! User id is : ' + req.user.email + '.'});//_id is autoincrement
+});
+
+router.get('/spirometryData', passport.authenticate('jwt', {session: false}), function (req, res) {
+
+    User.find('spirometryData').where('email').equals(req.user.email).select('spirometryData').exec(function (err, data) {
+        if (!err) {
+            console.log("found data for user " + req.user.email + ": " + data);
+            res.send(data);
+        } else {
+            console.log("Redirected because of error: " + err);
+            res.redirect('/');
+        }
+    });
+
 });
 
 module.exports = router;

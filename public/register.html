@@ -1,0 +1,15 @@
+<h2>Register</h2>
+<form name="registerForm">
+    <table>
+        <tr>
+            <td>email</td>
+            <td><input ng-model="email" type="email"/></td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td><input ng-model="password" type="password"/></td>
+        </tr>
+    </table>
+    <button ng-click="register()">register</button>
+</form>
+<span ng-hide="answer==null">{{answer}}</span>
