@@ -1,4 +1,5 @@
 app.controller("restController", function ($scope, $http, $window) {
+
     $scope.baseUrl = "http://localhost:3001";
     $scope.getDashboard = function () {
         var config = {
@@ -24,7 +25,7 @@ app.controller("restController", function ($scope, $http, $window) {
     * Just a helper method to factorise some code in the register and authenticate methods.
     * */
     $scope.getPostRequest = function(url){
-        alert("post: "+  $scope.email + ", "+ $scope.password);
+        console.log("post: "+  $scope.email + ", "+ $scope.password);
         var request = {
             method: "POST",
             url: $scope.baseUrl+"/"+url,
@@ -41,18 +42,18 @@ app.controller("restController", function ($scope, $http, $window) {
     $scope.register = function () {
         $http($scope.getPostRequest('register')).then(
             function (response) {//Success
-                alert("success");
+                console.log("success");
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "success: " + s + ", " + m;
-                alert($scope.answer);
+                console.log($scope.answer);
             },
             function (response) {//Failed
-                alert("Failed");
+                console.log("Failed");
                 var s = response.data.success;
                 var m = response.data.message;
                 $scope.answer = "failed: " + s + ", " + m;
-                alert($scope.answer);
+                console.log($scope.answer);
             }
         )
     }
