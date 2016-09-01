@@ -13,9 +13,9 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    publickey: String,
-    privatekey: String,
-    encryptionKey: String,
+    publicKey: String,
+    privateKeyEnc: String,
+    encryptionKeyEnc: String,
 
     spirometryData: []
 });
