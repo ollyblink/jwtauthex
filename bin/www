@@ -20,6 +20,7 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
+var server = http.createServer(app);
 
 var options = {
   key: fs.readFileSync('key.pem'),
@@ -31,7 +32,6 @@ var handler = function (req, res) {
   res.end('You are authorised! Welcome friend! \n');
 };
 
-//var server = http.createServer(app);
 //var serverSecure = https.createServer(options, handler);
 // use this instead to access the whole app in https
 var serverSecure = https.createServer(options, app);

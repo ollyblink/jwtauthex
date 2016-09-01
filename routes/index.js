@@ -80,7 +80,7 @@ router.get('/dashboard', passport.authenticate('jwt', {session: false}), functio
 });
 
 router.get('/spirometrydata', passport.authenticate('jwt', {session: false}), function (req, res) {
-    console.log("spirometrydata");
+    console.log("spirometrydata for user: "+ req.user.email +", "+ req.user.password);
     User.find('spirometrydata').where('email').equals(req.user.email).select('spirometryData').exec(function (err, data) {
         if (!err) {
             console.log("found data for user " + req.user.email + ": " + data);
