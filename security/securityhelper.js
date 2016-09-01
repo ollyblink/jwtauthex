@@ -2,9 +2,18 @@
  * As long as the typescript classes are making problems, these functions can be used instead.
  */
 //TODO Refactor ... these functions come from AsymmetricEncryptionHelper.ts and SymmetricEncryptionHelper.ts
-
+ var express = require('express');
+var router = express.Router();
+var User = require('../app/models/user');
+var passport = require('passport');
+var jwt = require('jsonwebtoken');
+var config = require('../config/main'); //node expect js files. thus you don't need to write .js here
+var security = require('../security/securityhelper');
+var algorithm = "aes-256-ctr";
 var crypto = require('crypto');
 var nodeforge = require('node-forge');
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+
 module.exports = {
     symmetricEncrypt: function (text, algorithm, encryptionkey) {
         var cipher = crypto.createCipher(algorithm, encryptionkey);
@@ -46,5 +55,24 @@ module.exports = {
             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
         return uuid;
+    },
+
+    /**
+     * TODO: implement as aspect
+     * @returns {*}
+     */
+    getEncryptionKey: function (req) {
+        var jwtFromRequest = ExtractJwt.fromAuthHeader();
+        var token = jwtFromRequest(req);
+        var encryptionKey = jwt.verify(token, config.secret).encKey;
+        return encryptionKey;
+    },
+
+    getUsername: function (req) {
+        var jwtFromRequest = ExtractJwt.fromAuthHeader();
+        var token = jwtFromRequest(req);
+        var username = jwt.verify(token, config.secret).email;
+        return username;
     }
+
 }

@@ -9,8 +9,12 @@ var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('./config/main'); //node expect js files. thus you don't need to write .js here
+// cors is necessary for correct parsing of the data from the mongo db
+var cors = require("cors");
 
 var routes = require('./routes/index');
+var dataRoutes = require('./routes/spirometrydata');
+var consentRoutes = require('./routes/consent');
 
 
 //Log request to console
@@ -37,6 +41,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Add the routes
 app.use('/', routes);
+app.use('/spirometrydata', dataRoutes);
+app.use('/consent', consentRoutes);
 
 
 // catch 404 and forward to error handler
