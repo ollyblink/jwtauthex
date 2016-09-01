@@ -1,13 +1,12 @@
 app.controller("restController", function ($scope, $http, $window) {
 
-    $scope.baseUrl = "http://localhost:3001";
     $scope.getDashboard = function () {
         var config = {
             headers: {
                 'Authorization': $window.localStorage['jwtToken']
             }
         }
-        $http.get($scope.baseUrl+"/dashboard", config).then(function (response) {
+        $http.get($rootScope.baseUrl+"/dashboard", config).then(function (response) {
             $scope.data = response.data;
         });
     };
@@ -17,7 +16,7 @@ app.controller("restController", function ($scope, $http, $window) {
                 'Authorization': $window.localStorage['jwtToken']
             }
         }
-        $http.get($scope.baseUrl+"/spirometryData", config).then(function (response) {
+        $http.get($rootScope.baseUrl+"/spirometryData", config).then(function (response) {
             $scope.data = response.data;
         });
     };

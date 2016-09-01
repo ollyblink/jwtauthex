@@ -79,9 +79,9 @@ router.get('/dashboard', passport.authenticate('jwt', {session: false}), functio
     res.send({data: 'it worked! User id is : ' + req.user.email + '.'});//_id is autoincrement
 });
 
-router.get('/spirometryData', passport.authenticate('jwt', {session: false}), function (req, res) {
-
-    User.find('spirometryData').where('email').equals(req.user.email).select('spirometryData').exec(function (err, data) {
+router.get('/spirometrydata', passport.authenticate('jwt', {session: false}), function (req, res) {
+    console.log("spirometrydata");
+    User.find('spirometrydata').where('email').equals(req.user.email).select('spirometryData').exec(function (err, data) {
         if (!err) {
             console.log("found data for user " + req.user.email + ": " + data);
             res.send(data);
