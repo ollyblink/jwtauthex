@@ -7,33 +7,42 @@ var config = require('../config/main'); //node expect js files. thus you don't n
 var security = require('../security/securityhelper');
 var algorithm = "aes-256-ctr";
 
-router.get('/', passport.authenticate('jwt', {session: false}), function (req, res) {
-    var encryptionKey = security.getEncryptionKey(req);
-    var username = security.getUsername(req);
-    console.log("Decoded: for user " + username + " is " + encryptionKey);
+router.get('/', function (req, res) {
+    if (req.session && req.session.user) {
+        var encryptionKey = security.getEncryptionKey(req);
+        var username = security.getUsername(req);
+        console.log("Decoded: for user " + username + " is " + encryptionKey);
 
-    User.findOne({
-        email: username //That's the username...
-    }, function (err, user) {
-        if (err) {
-            throw err;
-        }
-        if (!user) {
-            res.send({success: false, message: 'Authentication failed! User not found.'});
-        } else {
-            if (!err) {
-                var data = [];
-                for (var i = 0; i < user.spirometryData.length; ++i) {
-                    var jsonData = JSON.parse(security.symmetricDecrypt(user.spirometryData[i], algorithm, encryptionKey));
-                    data.push(jsonData);
-                }
-                res.json(data);
-            } else {
-                console.log("Redirected because of error: " + err);
-                res.redirect('/');
+        User.findOne({
+            email: username //That's the username...
+        }, function (err, user) {
+            if (err) {
+                req.session.reset();
+                throw err;
             }
-        }
-    });
+            if (!user) {
+                req.session.reset();
+
+                res.send({success: false, message: 'Authentication failed! User not found.'});
+            } else {
+                if (!err) {
+                    var data = [];
+                    for (var i = 0; i < user.spirometryData.length; ++i) {
+                        var jsonData = JSON.parse(security.symmetricDecrypt(user.spirometryData[i], algorithm, encryptionKey));
+                        data.push(jsonData);
+                    }
+                    res.json(data);
+                } else {
+                    console.log("Redirected because of error: " + err);
+                    req.session.reset();
+
+                    res.redirect('/');
+                }
+            }
+        });
+    }else{
+        //no session found
+    }
 
 });
 

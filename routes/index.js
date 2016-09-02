@@ -13,6 +13,7 @@ router.post('/register', function (req, res) {
     if (!req.body.email || !req.body.password) {
         res.json({success: false, message: 'Please enter an email address and password to register'});
     } else {
+        //create the required keys
         var keyPair = security.createKeyPair();
         console.log("keypair: " + keyPair.privateKey + "\n" + keyPair.publicKey);
         var privateKeyEnc = security.symmetricEncrypt(keyPair.privateKey, algorithm, req.body.password);
@@ -62,17 +63,13 @@ router.post('/authenticate', function (req, res) {
                     //Decrypt the encryption key using the decrypted private key
                     var encryptionKey = security.decryptStringWithRsaPrivateKey(user.encryptionKeyEnc, privateKey)
                     console.log("encryption key: " + encryptionKey);
-                    //TODO what to do with the decrypted encryption key? Store it in a session, JWT, or not at all
-
-                    var tokenPayload = {
-                        email: user.email,
+                    var cookie ={
+                        user: user.email,
                         encKey: encryptionKey
                     }
-                    var token = jwt.sign(tokenPayload, config.secret, {
-                        expiresIn: 11111,//in seconds
-                    });
+                    req.session.user = cookie; //encrypted session information
 
-                    res.json({success: true, token: 'JWT ' + token});
+                    res.json({success: true, message: 'Âuthenticated'});
                 } else {
                     //PW doesn't match
                     res.send({success: false, message: 'Authentication failed. Passwords did not match.'});

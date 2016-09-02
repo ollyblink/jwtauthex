@@ -9,6 +9,7 @@
     "angular": "^1.5.8",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
+    "client-sessions": "^0.7.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.0",
     "crypto": "0.0.3",

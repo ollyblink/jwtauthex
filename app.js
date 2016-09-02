@@ -12,6 +12,15 @@ var config = require('./config/main'); //node expect js files. thus you don't ne
 // cors is necessary for correct parsing of the data from the mongo db
 var cors = require("cors");
 
+//the next lines is to stores secure cookies
+var sessions = require('client-sessions');
+app.use(session({
+    cookieName: 'session',
+    secret: 'kldjfhklsajdklsjfd', //encrypting/decrypting data of session --> stored values cannot be looked at. Server needs this
+    duration: 30*60*1000, //Amount of milliseconds until cookie expires
+    activeDuration: 5*60*1000, // lengthens session
+}));
+
 var routes = require('./routes/index');
 var dataRoutes = require('./routes/spirometrydata');
 var consentRoutes = require('./routes/consent');
